@@ -19,7 +19,7 @@ public class PolicyReader {
 
     private static final Log log = LogFactory.getLog(PolicyReader.class);
 
-    private static File policyFolder = new File("/Users/tharaka/Documents/issues/sample/xacml");
+    private static File policyFolder = new File("/Users/tharakaw/Documents/issues/sample/xacml");
     private static List<String> policyIdList = new ArrayList<>();;
     private static ArrayList<PolicyDTO> policyDTOs = new ArrayList<>();;
     private static PolicyDistributionTask policyDistributionTask = new PolicyDistributionTask(10);;
@@ -28,7 +28,7 @@ public class PolicyReader {
         BasicConfigurator.configure();
         LogManager.getLogger("org.apache.axis2").setLevel(Level.INFO);
         LogManager.getLogger("org.apache.axiom").setLevel(Level.INFO);
-        System.setProperty("javax.net.ssl.trustStore","/Users/tharaka/Documents/issues/sample/wso2is-5.8.0/repository/resources/security/client-truststore.jks");
+        System.setProperty("javax.net.ssl.trustStore","/Users/tharakaw/Documents/issues/sample/wso2is-5.10.0/repository/resources/security/client-truststore.jks");
         System.setProperty("javax.net.ssl.trustStorePassword","wso2carbon");
         File[] fileList;
         if (policyFolder.exists() && ArrayUtils.isNotEmpty(fileList = policyFolder.listFiles())) {
@@ -38,11 +38,14 @@ public class PolicyReader {
                     PolicyDTO policyDTO = new PolicyDTO();
                     try {
                         policyDTO.setPolicy(FileUtils.readFileToString(policyFile));
+                        policyDTO.setPromote(true);
+                        policyDTO.setActive(true);
                     } catch (IOException e) {
                         log.error("Error reading from file", e);
                     }
                     policyDTOs.add(policyDTO);
                     if(policyDTOs.size() % 10 == 0) {
+                        policyDTOs.add(null);
                         policyDistributionTask.addPolicyDtoToQueue(new ArrayList<PolicyDTO>(policyDTOs));
                         policyDTOs.clear();
                         log.info("policy set added to queue");
